@@ -1,10 +1,10 @@
 /*
-› Create By Haikal
-› Base Ori Haikal
+� Create By emily
+� Base Ori emily
 
-🌷 KALAU MAU RENAME TARO CREDITS GUA : HW MODS WA☆ */
+ KALAU MAU RENAME TARO CREDITS GUA : Laksmana27 */
 
-require('./hwkal')
+require('./config')
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, generateForwardMessageContent, prepareWAMessageMedia, generateWAMessageFromContent, generateMessageID, downloadContentFromMessage, makeInMemoryStore, jidDecode, getAggregateVotesInPollMessage, proto } = require("@whiskeysockets/baileys")
 const fs = require('fs')
 const pino = require('pino')
@@ -74,22 +74,22 @@ loadDatabase()
 //=================================================//
 async function connectToWhatsApp() {
 const { state, saveCreds } = await useMultiFileAuthState(global.sessionName)
-const haikal = makeWASocket({
+const emily = makeWASocket({
 logger: pino({ level: 'silent' }),
 printQRInTerminal: !usePairingCode,
 auth: state,
-browser: ['Chrome (Linux)', '', '']
+browser: ['Emily (byRLP27)', '', '']
 });
 
-if(usePairingCode && !haikal.authState.creds.registered) {
+if(usePairingCode && !emily.authState.creds.registered) {
 const phoneNumber = await question(color('\n\n\nSilahkan masukin nomor Whatsapp Awali dengan 62:\n', 'magenta'));
-const code = await haikal.requestPairingCode(phoneNumber.trim())
-console.log(color(`⚠︎ Kode Pairing Bot Whatsapp kamu :`,"gold"), color(`${code}`, "white"))
+const code = await emily.requestPairingCode(phoneNumber.trim())
+console.log(color(` Kode Pairing Bot Whatsapp kamu :`,"gold"), color(`${code}`, "white"))
 
 }
-store.bind(haikal.ev)
+store.bind(emily.ev)
 //=================================================//
-haikal.decodeJid = (jid) => {
+emily.decodeJid = (jid) => {
 if (!jid) return jid
 if (/:\d+@/gi.test(jid)) {
 let decode = jidDecode(jid) || {}
@@ -97,16 +97,16 @@ return decode.user && decode.server && decode.user + '@' + decode.server || jid
 } else return jid
 }
 //=================================================//
-haikal.ev.on('messages.upsert', async chatUpdate => {
+emily.ev.on('messages.upsert', async chatUpdate => {
 try {
 mek = chatUpdate.messages[0]
 if (!mek.message) return
 mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
 if (mek.key && mek.key.remoteJid === 'status@broadcast') return
-if (!haikal.public && !mek.key.fromMe && chatUpdate.type === 'notify') return
+if (!emily.public && !mek.key.fromMe && chatUpdate.type === 'notify') return
 if (mek.key.id.startsWith('BAE5') && mek.key.id.length === 16) return
-m = smsg(haikal, mek, store)
-require("./haikal")(haikal, m, chatUpdate, store)
+m = smsg(emily, mek, store)
+require("./Emily")(emily, m, chatUpdate, store)
 } catch (err) {
 console.log(err)
 }
@@ -114,43 +114,43 @@ console.log(err)
 
 
 //=================================================//
-haikal.ev.on('group-participants.update', async (anu) => {
+emily.ev.on('group-participants.update', async (anu) => {
 if (!wlcm.includes(anu.id)) return
 console.log(anu)
 try {
-let metadata = await haikal.groupMetadata(anu.id)
+let metadata = await emily.groupMetadata(anu.id)
 let participants = anu.participants
 for (let num of participants) {
 // Get Profile Picture User
 try {
-ppuser = await haikal.profilePictureUrl(num, 'image')
+ppuser = await emily.profilePictureUrl(num, 'image')
 } catch {
 ppuser = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60'
 }
 
 // Get Profile Picture Group
 try {
-ppgroup = await haikal.profilePictureUrl(anu.id, 'image')
+ppgroup = await emily.profilePictureUrl(anu.id, 'image')
 } catch {
 ppgroup = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60'
 }
 
 if (anu.action == 'add') {
-haikal.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `Haii Kak *@${num.split("@")[0]}* Selamat Datang Di Group *${metadata.subject}* 👋
- ▬▭▬▭▬▭▬▭▬▬▭▬▭▬
-Terima Kasih Sudah Bergabung Jangan Lupa Baca Deskripsi Yah
-▬▭▬▭▬▭▬▭▬▬▭▬▭▬
-Creator : https://wa.me/6285926340758`})
+emily.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `Haii Kak *@${num.split("@")[0]}* Selamat Datang Di Group *${metadata.subject}* 
+ 
+Terima Kasih Sudah Bergabung ${metadata.desc}
+
+Creator : https://wa.me/62895372305081`})
 } else if (anu.action == 'remove') {
-haikal.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `Karena Untuk Setiap Ucapan Selamat Datang Akan Selalu Diakhiri Dengan Ucapan Selamat Tinggal 👋
-▬▭▬▭▬▭▬▭▬▬▭▬▭▬
+emily.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `Karena Untuk Setiap Ucapan Selamat Datang Akan Selalu Diakhiri Dengan Ucapan Selamat Tinggal 
+
 Selamat Tinggal *@${num.split("@")[0]}* Di Group *${metadata.subject}*
-▬▭▬▭▬▭▬▭▬▬▭▬▭▬
-Creator : https://wa.me/6285926340758`})
+
+Creator : https://wa.me/62895372305081`})
 } else if (anu.action == 'promote') {
-haikal.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `@${num.split('@')[0]} Ciee Jadi Admin Di Group ${metadata.subject} ${metadata.desc}`  })
+emily.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `@${num.split('@')[0]} Ciee Jadi Admin Di Group ${metadata.subject} ${metadata.desc}`  })
 } else if (anu.action == 'demote') {
-haikal.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `@${num.split('@')[0]} Ciee Di Hapus Jadi Admin Di Group ${metadata.subject} ${metadata.desc}`})
+emily.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `@${num.split('@')[0]} Ciee Di Hapus Jadi Admin Di Group ${metadata.subject} ${metadata.desc}`})
   }
 }
 } catch (err) {
@@ -158,44 +158,44 @@ console.log(err)
 }
 })
 //=================================================//
-haikal.ev.on('contacts.update', update => {
+emily.ev.on('contacts.update', update => {
 for (let contact of update) {
-let id = haikal.decodeJid(contact.id)
+let id = emily.decodeJid(contact.id)
 if (store && store.contacts) store.contacts[id] = { id, name: contact.notify }}})
 //=================================================//
-haikal.getName = (jid, withoutContact  = false) => {
-id = haikal.decodeJid(jid)
-withoutContact = haikal.withoutContact || withoutContact 
+emily.getName = (jid, withoutContact  = false) => {
+id = emily.decodeJid(jid)
+withoutContact = emily.withoutContact || withoutContact 
 let v
 if (id.endsWith("@g.us")) return new Promise(async (resolve) => {
 v = store.contacts[id] || {}
-if (!(v.name || v.subject)) v = haikal.groupMetadata(id) || {}
+if (!(v.name || v.subject)) v = emily.groupMetadata(id) || {}
 resolve(v.name || v.subject || PhoneNumber('+' + id.replace('@s.whatsapp.net', '')).getNumber('international'))
 })
 else v = id === '0@s.whatsapp.net' ? {
 id,
 name: 'WhatsApp'
-} : id === haikal.decodeJid(haikal.user.id) ?
-haikal.user :
+} : id === emily.decodeJid(emily.user.id) ?
+emily.user :
 (store.contacts[id] || {})
 return (withoutContact ? '' : v.name) || v.subject || v.verifiedName || PhoneNumber('+' + jid.replace('@s.whatsapp.net', '')).getNumber('international')}
 //=================================================//
-haikal.sendContact = async (jid, kon, quoted = '', opts = {}) => {
+emily.sendContact = async (jid, kon, quoted = '', opts = {}) => {
 let list = []
 for (let i of kon) {
 list.push({
-displayName: await haikal.getName(i + '@s.whatsapp.net'),
-vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${await haikal.getName(i + '@s.whatsapp.net')}\nFN:${await haikal.getName(i + '@s.whatsapp.net')}\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Ponsel\nX-WA-BIZ-DESCRIPTION:DEVELOPER HW MODS WA => Owner : 085926340758\nX-WA-BIZ-NAME:HW MODS BOT\nEND:VCARD`})}
+displayName: await emily.getName(i + '@s.whatsapp.net'),
+vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${await emily.getName(i + '@s.whatsapp.net')}\nFN:${await emily.getName(i + '@s.whatsapp.net')}\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Ponsel\nX-WA-BIZ-DESCRIPTION:DEVELOPER Laksmana27 => Owner : 0895372305081\nX-WA-BIZ-NAME:Laksmana27\nEND:VCARD`})}
 //=================================================//
-haikal.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contacts: list }, ...opts }, { quoted })}
+emily.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contacts: list }, ...opts }, { quoted })}
 //=================================================//
 //Kalau Mau Self Lu Buat Jadi false
-haikal.public = true
+emily.public = true
 //=================================================//
 //=================================================//
-haikal.ev.on('creds.update', saveCreds)
+emily.ev.on('creds.update', saveCreds)
  //=================================================//
- haikal.downloadMediaMessage = async (message) => {
+ emily.downloadMediaMessage = async (message) => {
 let mime = (message.msg || message).mimetype || ''
 let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0]
 const stream = await downloadContentFromMessage(message, messageType)
@@ -204,35 +204,35 @@ for await(const chunk of stream) {
 buffer = Buffer.concat([buffer, chunk])}
 return buffer} 
  //=================================================//
- haikal.sendImage = async (jid, path, caption = '', quoted = '', options) => {
+ emily.sendImage = async (jid, path, caption = '', quoted = '', options) => {
 let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-return await haikal.sendMessage(jid, { image: buffer, caption: caption, ...options }, { quoted })}
+return await emily.sendMessage(jid, { image: buffer, caption: caption, ...options }, { quoted })}
 //=================================================//
-haikal.sendText = (jid, text, quoted = '', options) => haikal.sendMessage(jid, { text: text, ...options }, { quoted })
+emily.sendText = (jid, text, quoted = '', options) => emily.sendMessage(jid, { text: text, ...options }, { quoted })
 //=================================================//
-haikal.sendTextWithMentions = async (jid, text, quoted, options = {}) => haikal.sendMessage(jid, { text: text, contextInfo: { mentionedJid: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net') }, ...options }, { quoted })
+emily.sendTextWithMentions = async (jid, text, quoted, options = {}) => emily.sendMessage(jid, { text: text, contextInfo: { mentionedJid: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net') }, ...options }, { quoted })
  //=================================================//
-haikal.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
+emily.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
 let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
 let buffer
 if (options && (options.packname || options.author)) {
 buffer = await writeExifImg(buff, options)
 } else {
 buffer = await imageToWebp(buff)}
-await haikal.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+await emily.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
 return buffer}
  //=================================================//
-haikal.sendVideoAsSticker = async (jid, path, quoted, options = {}) => {
+emily.sendVideoAsSticker = async (jid, path, quoted, options = {}) => {
 let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
 let buffer
 if (options && (options.packname || options.author)) {
 buffer = await writeExifVid(buff, options)
 } else {
 buffer = await videoToWebp(buff)}
-await haikal.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+await emily.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
 return buffer}
  //=================================================//
- haikal.downloadAndSaveMediaMessage = async (message, filename, attachExtension = true) => {
+ emily.downloadAndSaveMediaMessage = async (message, filename, attachExtension = true) => {
 let quoted = message.msg ? message.msg : message
 let mime = (message.msg || message).mimetype || ''
 let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0]
@@ -246,7 +246,7 @@ trueFileName = attachExtension ? (filename + '.' + type.ext) : filename
 await fs.writeFileSync(trueFileName, buffer)
 return trueFileName}
 //=================================================
- haikal.cMod = (jid, copy, text = '', sender = haikal.user.id, options = {}) => {
+ emily.cMod = (jid, copy, text = '', sender = emily.user.id, options = {}) => {
 //let copy = message.toJSON()
 let mtype = Object.keys(copy.message)[0]
 let isEphemeral = mtype === 'ephemeralMessage'
@@ -265,10 +265,10 @@ else if (copy.key.participant) sender = copy.key.participant = sender || copy.ke
 if (copy.key.remoteJid.includes('@s.whatsapp.net')) sender = sender || copy.key.remoteJid
 else if (copy.key.remoteJid.includes('@broadcast')) sender = sender || copy.key.remoteJid
 copy.key.remoteJid = jid
-copy.key.fromMe = sender === haikal.user.id
+copy.key.fromMe = sender === emily.user.id
 return proto.WebMessageInfo.fromObject(copy)}
-haikal.sendFile = async(jid, PATH, fileName, quoted = {}, options = {}) => {
-let types = await haikal.getFile(PATH, true)
+emily.sendFile = async(jid, PATH, fileName, quoted = {}, options = {}) => {
+let types = await emily.getFile(PATH, true)
 let { filename, size, ext, mime, data } = types
 let type = '', mimetype = mime, pathFile = filename
 if (options.asDocument) type = 'document'
@@ -283,12 +283,12 @@ else if (/image/.test(mime)) type = 'image'
 else if (/video/.test(mime)) type = 'video'
 else if (/audio/.test(mime)) type = 'audio'
 else type = 'document'
-await haikal.sendMessage(jid, { [type]: { url: pathFile }, mimetype, fileName, ...options }, { quoted, ...options })
+await emily.sendMessage(jid, { [type]: { url: pathFile }, mimetype, fileName, ...options }, { quoted, ...options })
 return fs.promises.unlink(pathFile)}
-haikal.parseMention = async(text) => {
+emily.parseMention = async(text) => {
 return [...text.matchAll(/@([0-9]{5,16}|0)/g)].map(v => v[1] + '@s.whatsapp.net')}
 //=================================================//
-haikal.copyNForward = async (jid, message, forceForward = false, options = {}) => {
+emily.copyNForward = async (jid, message, forceForward = false, options = {}) => {
 let vtype
 if (options.readViewOnce) {
 message.message = message.message && message.message.ephemeralMessage && message.message.ephemeralMessage.message ? message.message.ephemeralMessage.message : (message.message || undefined)
@@ -312,10 +312,10 @@ const waMessage = await generateWAMessageFromContent(jid, content, options ? {
 contextInfo: {
 ...content[ctype].contextInfo,
 ...options.contextInfo}} : {})} : {})
-await haikal.relayMessage(jid, waMessage.message, { messageId:  waMessage.key.id })
+await emily.relayMessage(jid, waMessage.message, { messageId:  waMessage.key.id })
 return waMessage}
 //=================================================//
-haikal.getFile = async (PATH, save) => {
+emily.getFile = async (PATH, save) => {
 let res
 let data = Buffer.isBuffer(PATH) ? PATH : /^data:.*?\/.*?;base64,/i.test(PATH) ? Buffer.from(PATH.split`,`[1], 'base64') : /^https?:\/\//.test(PATH) ? await (res = await getBuffer(PATH)) : fs.existsSync(PATH) ? (filename = PATH, fs.readFileSync(PATH)) : typeof PATH === 'string' ? PATH : Buffer.alloc(0)
 //if (!Buffer.isBuffer(data)) throw new TypeError('Result is not a buffer')
@@ -333,8 +333,8 @@ filename,
 data
 }
 }
-haikal.serializeM = (m) => smsg(haikal, m, store)
-haikal.ev.on("connection.update", async (update) => {
+emily.serializeM = (m) => smsg(emily, m, store)
+emily.ev.on("connection.update", async (update) => {
 const { connection, lastDisconnect } = update;
 if (connection === "close") {
   let reason = new Boom(lastDisconnect?.error)?.output.statusCode;
@@ -364,11 +364,11 @@ console.log(`Unknown DisconnectReason: ${reason}|${connection}`);
 connectToWhatsApp();
   }
 } else if (connection === "open") {
-  haikal.sendMessage('6285926340758' + "@s.whatsapp.net", { text: `*Lapor! 🫡*\n\n_V23 bot berhasil terhubung ke server dengan baik_\n\n* Note :\n\n Sukses Mencopy Data Anda!!!\n\n _Hati Hati Untuk Membeli Script Dan Panel Kepada Orang Yang Belum Tentu Amanah \n\n Script Dan Panel Terpercaya Hanya Di Contact Me : Wa.me/6285926340758 \n\n Jika Kalian Menjual Script Ini Di Bawah Harga Aslinya Di Pastikan Tidak Akan Ada Update Selanjutnya Tolong Hargai Pembuat Script Ini , APALAGI MEMBAGIKAN NYA SECARA GRATIS !!! Aku Mau Donasi Bang https://saweria.co/HanszzzMods` });
+  emily.sendMessage('62895372305081' + "@s.whatsapp.net", { text: `*Lapor! *\n\n_Emily bot berhasil terhubung ke server dengan baik_\n\n* Note :\n\n Sukses Mencopy Data Anda!!!\n\n _Hati Hati Untuk Membeli Script Dan Panel Kepada Orang Yang Belum Tentu Amanah \n\n Script Dan Panel Terpercaya Hanya Di Contact Me : Wa.me/628595372305081 \n\n Jika Kalian Menjual Script Ini Di Bawah Harga Aslinya Di Pastikan Tidak Akan Ada Update Selanjutnya Tolong Hargai Pembuat Script Ini , APALAGI MEMBAGIKAN NYA SECARA GRATIS !!! Aku Mau Donasi Bang https://saweria.co/RLP27` });
 }
 // console.log('Connected...', update)
 });
-return haikal
+return emily
 }
 connectToWhatsApp()
 let file = require.resolve(__filename)
